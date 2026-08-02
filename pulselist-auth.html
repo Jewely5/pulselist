@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseList Auth</title>
+  <meta name="description" content="Create an account, sign in, or reset your password for PulseList." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="pulselist-auth.css" />
+
+  <!-- Firebase compat SDKs (work everywhere, no import/module needed) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <main class="auth-shell" id="main">
+    <section class="auth-brand-panel">
+      <a href="index.html" class="back-link">← Back to home</a>
+
+      <div class="brand-lockup">
+        <p class="brand-mark">PulseList</p>
+        <h1>Stay ahead of every deadline.</h1>
+        <p class="brand-copy">
+          Track tasks across every area of your life with live countdowns, urgency cues,
+          and clear planning views.
+        </p>
+      </div>
+
+      <ul class="feature-list" role="list">
+        <li>Live countdown timers on every task</li>
+        <li>Urgency heatmap from calm to critical</li>
+        <li>Today view for daily focus</li>
+        <li>Timeline view for broader planning</li>
+        <li>Local-first workflow with simple organization</li>
+      </ul>
+    </section>
+
+    <section class="auth-form-panel">
+      <div class="auth-card">
+        <div class="auth-topbar">
+          <button class="ghost-toggle is-active" type="button" data-auth-tab="signup">Create account</button>
+          <button class="ghost-toggle" type="button" data-auth-tab="signin">Sign in</button>
+        </div>
+
+        <!-- SIGN UP -->
+        <section class="auth-view is-active" data-auth-panel="signup">
+          <header class="panel-head">
+            <h2>Create your account</h2>
+            <p>Free forever. No credit card required.</p>
+          </header>
+
+          <form class="auth-form" id="signupForm" novalidate>
+            <div class="field-grid">
+              <label>
+                <span>First name</span>
+                <input type="text" name="firstName" placeholder="Ashley" required />
+                <small class="field-help">Enter your first name.</small>
+              </label>
+              <label>
+                <span>Last name</span>
+                <input type="text" name="lastName" placeholder="Smith" required />
+                <small class="field-help">Enter your last name.</small>
+              </label>
+            </div>
+
+            <label>
+              <span>Email</span>
+              <input type="email" name="email" placeholder="you@example.com" required />
+              <small class="field-help">Enter a valid email address.</small>
+            </label>
+
+            <label>
+              <span>Password</span>
+              <input type="password" name="password" placeholder="Create a password" minlength="6" required />
+              <small class="field-help">Password must be at least 6 characters.</small>
+            </label>
+
+            <label>
+              <span>Confirm password</span>
+              <input type="password" name="confirmPassword" placeholder="Confirm your password" minlength="6" required />
+              <small class="field-help">Passwords must match.</small>
+            </label>
+
+            <label class="checkbox-row">
+              <input type="checkbox" name="terms" required />
+              <span>I agree to the terms and privacy policy.</span>
+            </label>
+
+            <div id="signupError" style="display:none;color:#e74c3c;font-size:.85rem;margin-bottom:8px;"></div>
+            <button class="button button-primary" type="submit">Create account</button>
+          </form>
+        </section>
+
+        <!-- SIGN IN -->
+        <section class="auth-view" data-auth-panel="signin" hidden>
+          <header class="panel-head">
+            <h2>Welcome back</h2>
+            <p>Sign in to continue to PulseList.</p>
+          </header>
+
+          <form class="auth-form" id="signinForm" novalidate>
+            <label>
+              <span>Email</span>
+              <input type="email" name="signinEmail" placeholder="you@example.com" required />
+              <small class="field-help">Enter your email address.</small>
+            </label>
+
+            <label>
+              <span>Password</span>
+              <input type="password" name="signinPassword" placeholder="Enter your password" required />
+              <small class="field-help">Enter your password.</small>
+            </label>
+
+            <div id="signinError" style="display:none;color:#e74c3c;font-size:.85rem;margin-bottom:8px;"></div>
+            <button class="button button-primary" type="submit">Sign in</button>
+            <button class="link-button" type="button" data-open-reset>Reset password</button>
+          </form>
+        </section>
+
+        <!-- RESET PASSWORD -->
+        <section class="auth-view" data-auth-panel="reset" hidden>
+          <header class="panel-head">
+            <h2>Reset password</h2>
+            <p>Enter your email and we'll send a reset link.</p>
+          </header>
+
+          <form class="auth-form" id="resetForm" novalidate>
+            <label>
+              <span>Email</span>
+              <input type="email" name="resetEmail" placeholder="you@example.com" required />
+              <small class="field-help">Enter a valid email address.</small>
+            </label>
+
+            <div id="resetError" class="error-message"></div>
+            <button class="button button-primary" type="submit">Send reset link</button>
+            <button class="link-button" type="button" data-back-to-signin>Back to sign in</button>
+          </form>
+
+          <div class="success-note" hidden data-reset-success>
+            ✓ Check your email for a reset link.
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Auth logic loads after the DOM -->
+  <script src="pulselist-auth.js"></script>
+</body>
+</html>

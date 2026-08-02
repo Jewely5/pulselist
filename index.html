@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseList — One App. Total Control.</title>
+  <meta name="description" content="PulseList brings together task tracking and personal finance in one browser app. Free to use, no subscriptions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --anchor:      #6B7A3A;
+      --anchor-dark: #4f5a2a;
+      --anchor-text: #1A2010;
+    }
+
+    /* ── App cards ── */
+    .app-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .app-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      padding: 2.25rem 2rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: rgba(252, 250, 247, 0.9);
+      box-shadow: var(--shadow-md);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .app-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .app-card.card-pulselist {
+      border-color: rgba(15, 118, 110, 0.2);
+      background: linear-gradient(145deg, rgba(15,118,110,0.05) 0%, rgba(252,250,247,0.95) 60%);
+    }
+    .app-card.card-pulselist:hover { border-color: rgba(15,118,110,0.45); }
+
+    .app-card.card-anchor {
+      border-color: rgba(107,122,58,0.25);
+      background: linear-gradient(145deg, rgba(107,122,58,0.06) 0%, rgba(244,241,224,0.95) 60%);
+    }
+    .app-card.card-anchor:hover { border-color: rgba(107,122,58,0.5); }
+
+    .app-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+    .app-name.name-pulselist { color: var(--primary); }
+    .app-name.name-anchor    { color: var(--anchor); }
+
+    .app-arrow {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+    .card-pulselist .app-arrow { background: rgba(15,118,110,0.1); color: var(--primary); }
+    .card-anchor    .app-arrow { background: rgba(124,58,237,0.1); color: var(--anchor); }
+    .app-card:hover .app-arrow { transform: translate(3px, -3px); }
+
+    .app-desc {
+      font-size: var(--text-sm);
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .app-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+    .app-tag {
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .card-pulselist .app-tag {
+      background: rgba(15,118,110,0.08);
+      color: var(--primary);
+    }
+    .card-anchor .app-tag {
+      background: rgba(124,58,237,0.08);
+      color: var(--anchor);
+    }
+
+    .app-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+    .card-pulselist .app-cta { color: var(--primary); }
+    .card-anchor    .app-cta { color: var(--anchor); }
+
+    /* ── Signup strip ── */
+    .signup-strip {
+      margin-top: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .button-anchor {
+      color: white;
+      background: var(--anchor);
+    }
+    .button-anchor:hover {
+      background: var(--anchor-dark, #6027c4);
+      transform: translateY(-1px);
+    }
+
+    /* ── Scroll reveal ── */
+    [data-reveal] {
+      opacity: 0;
+      transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    }
+    [data-reveal="up"]    { transform: translateY(32px); }
+    [data-reveal="left"]  { transform: translateX(-32px); }
+    [data-reveal="right"] { transform: translateX(32px); }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    [data-stagger] > * {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.55s cubic-bezier(0.22,1,0.36,1);
+    }
+    [data-stagger].is-visible > *:nth-child(1) { transition-delay: 0.05s; }
+    [data-stagger].is-visible > *:nth-child(2) { transition-delay: 0.15s; }
+    [data-stagger].is-visible > * { opacity: 1; transform: none; }
+
+    @media (max-width: 680px) {
+      .app-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <a href="index.html" class="brand">PulseList</a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false"
+        aria-controls="navMenu" aria-label="Open menu" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="nav-menu" id="navMenu" data-nav-menu>
+        <a href="pulselist-details.html">PulseList</a>
+        <a href="https://pulselist.kamfolio.com/anchor-details.html">Anchor</a>
+        <a href="pulselist-auth.html" class="button button-primary">Sign up free</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="section" id="top">
+      <div class="container" style="max-width:52rem;margin-inline:auto;text-align:center;">
+
+        <div data-reveal="up">
+          <p class="eyebrow">Cloud-synced · Free to use · Runs in your browser</p>
+          <h1 style="font-size:var(--text-hero);line-height:1.05;letter-spacing:-0.04em;margin:0 0 1.25rem;">One app.<br>Total control.</h1>
+          <p class="hero-text" style="margin-inline:auto;max-width:46ch;">
+            PulseList combines a powerful task tracker with a full personal finance suite — built for people who want clarity without the clutter.
+          </p>
+        </div>
+
+        <div class="signup-strip" data-reveal="up" style="transition-delay:0.15s;">
+          <a href="pulselist-auth.html" class="button button-primary" style="min-width:160px;">Get started free</a>
+          <a href="pulselist-auth.html" class="button button-secondary">Sign in</a>
+        </div>
+
+        <div class="app-cards" data-stagger>
+
+          <a href="pulselist-details.html" class="app-card card-pulselist">
+            <div class="app-card-header">
+              <p class="app-name name-pulselist">PulseList</p>
+              <span class="app-arrow">↗</span>
+            </div>
+            <p class="app-desc">
+              Task tracking with live countdowns, urgency cues, progress rings, subtasks, and three powerful views so you always know what needs attention next.
+            </p>
+            <div class="app-tags">
+              <span class="app-tag">Tasks</span>
+              <span class="app-tag">Countdowns</span>
+              <span class="app-tag">Timeline</span>
+              <span class="app-tag">Cloud sync</span>
+            </div>
+            <span class="app-cta">See all features →</span>
+          </a>
+
+          <a href="https://pulselist.kamfolio.com/anchor-details.html" class="app-card card-anchor">
+            <div class="app-card-header">
+              <p class="app-name name-anchor">Anchor</p>
+              <span class="app-arrow">↗</span>
+            </div>
+            <p class="app-desc">
+              Personal finance built into PulseList. Track spending, set budgets, manage savings goals, monitor bills, and watch your net worth grow — all in one place.
+            </p>
+            <div class="app-tags">
+              <span class="app-tag">Budgets</span>
+              <span class="app-tag">Goals</span>
+              <span class="app-tag">Net Worth</span>
+              <span class="app-tag">Bills</span>
+            </div>
+            <span class="app-cta">See all features →</span>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span class="brand">PulseList</span>
+      <div class="footer-links">
+        <a href="pulselist-details.html">PulseList</a>
+        <a href="https://pulselist.kamfolio.com/anchor-details.html">Anchor</a>
+        <a href="pulselist-auth.html">Sign up</a>
+      </div>
+      <p>Built for people who hate missing deadlines and losing track of their money.</p>
+    </div>
+  </footer>
+
+  <script>
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } }),
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    );
+    document.querySelectorAll('[data-reveal],[data-stagger]').forEach(el => io.observe(el));
+
+    // mobile nav toggle
+    const toggle = document.querySelector('[data-nav-toggle]');
+    const menu   = document.querySelector('[data-nav-menu]');
+    if (toggle && menu) toggle.addEventListener('click', () => {
+      const open = menu.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open);
+    });
+  </script>
+</body>
+</html>

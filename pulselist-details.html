@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseList — Task Tracking with Time in View</title>
+  <meta name="description" content="PulseList gives every task a live countdown, urgency cues, and clear progress signals so you always know what needs attention next." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root { --anchor: #7c3aed; }
+
+    /* ── Scroll reveal ── */
+    [data-reveal] {
+      opacity: 0;
+      transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    }
+    [data-reveal="up"]    { transform: translateY(32px); }
+    [data-reveal="left"]  { transform: translateX(-36px); }
+    [data-reveal="right"] { transform: translateX(36px); }
+    [data-reveal="scale"] { transform: scale(0.96) translateY(16px); }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    [data-stagger] > * {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.5s cubic-bezier(0.22,1,0.36,1);
+    }
+    [data-stagger].is-visible > *:nth-child(1) { transition-delay: 0.04s; }
+    [data-stagger].is-visible > *:nth-child(2) { transition-delay: 0.10s; }
+    [data-stagger].is-visible > *:nth-child(3) { transition-delay: 0.16s; }
+    [data-stagger].is-visible > *:nth-child(4) { transition-delay: 0.22s; }
+    [data-stagger].is-visible > *:nth-child(5) { transition-delay: 0.28s; }
+    [data-stagger].is-visible > *:nth-child(6) { transition-delay: 0.34s; }
+    [data-stagger].is-visible > * { opacity: 1; transform: none; }
+
+    /* ── Section sweep bar ── */
+    .sweep-bar {
+      height: 3px;
+      width: 0;
+      border-radius: 999px;
+      background: var(--primary);
+      margin-bottom: 2.5rem;
+      transition: width 1s cubic-bezier(0.22,1,0.36,1);
+    }
+    .sweep-bar.is-visible { width: 100%; }
+
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <a href="index.html" class="brand">PulseList</a>
+      <button class="nav-toggle" type="button" aria-expanded="false"
+        aria-controls="navMenu" aria-label="Open menu" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-menu" id="navMenu" data-nav-menu>
+        <a href="pulselist-details.html" style="color:var(--primary);font-weight:700;">PulseList</a>
+        <a href="https://pulselist.kamfolio.com/anchor-details.html">Anchor</a>
+        <a href="pulselist-auth.html" class="button button-primary">Get started free</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- ── HERO ── -->
+    <section class="section" id="top">
+      <div class="container">
+        <a href="index.html" class="back-link">← Back to home</a>
+
+        <div class="hero-grid">
+          <div class="hero-copy" data-reveal="left">
+            <p class="eyebrow">Smart task tracking</p>
+            <h1>The task tracker that keeps your time in view.</h1>
+            <p class="hero-text">
+              PulseList gives every task a live countdown, urgency cues, and clear progress signals
+              so you always know what needs attention next.
+            </p>
+            <div class="hero-actions">
+              <a href="pulselist-auth.html" class="button button-primary">Get started free</a>
+              <a href="pulselist-app.html" class="button button-secondary">Open app preview</a>
+            </div>
+            <ul class="hero-points" role="list">
+              <li>Free account, no credit card</li>
+              <li>Syncs across your devices</li>
+              <li>Runs in the browser</li>
+            </ul>
+          </div>
+
+          <div class="hero-panel" aria-label="PulseList preview" data-reveal="right">
+            <div class="window-bar">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <p>PulseList preview</p>
+            </div>
+            <div class="preview-grid">
+              <article class="preview-card is-overdue">
+                <span class="preview-label">Work</span>
+                <h2>Q3 budget report</h2>
+                <p>Overdue by 2d 3h</p>
+              </article>
+              <article class="preview-card is-warning">
+                <span class="preview-label">School</span>
+                <h2>Research paper draft</h2>
+                <p>1d 4h remaining</p>
+              </article>
+              <article class="preview-card">
+                <span class="preview-label">Personal</span>
+                <h2>Plan weekend trip</h2>
+                <p>12d remaining</p>
+              </article>
+              <article class="preview-card is-done">
+                <span class="preview-label">Business</span>
+                <h2>Launch email campaign</h2>
+                <p>Completed</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS ── -->
+    <section class="section-tight" aria-label="PulseList highlights">
+      <div class="container">
+        <div class="stats-grid" data-stagger>
+          <article class="stat-card">
+            <strong>4</strong>
+            <span>Task categories</span>
+          </article>
+          <article class="stat-card">
+            <strong>3</strong>
+            <span>Powerful views</span>
+          </article>
+          <article class="stat-card">
+            <strong>&infin;</strong>
+            <span>Tasks you can track</span>
+          </article>
+          <article class="stat-card">
+            <strong>0</strong>
+            <span>Required accounts</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FEATURES ── -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="sweep-bar" data-reveal="band"></div>
+
+        <div class="section-head" data-reveal="up">
+          <p class="eyebrow">Features</p>
+          <h2>Everything you need to stay on track</h2>
+          <p class="section-text">
+            PulseList keeps planning simple while giving you the structure to manage deadlines,
+            priorities, and task momentum.
+          </p>
+        </div>
+
+        <div class="feature-grid" data-stagger>
+          <article class="feature-card">
+            <h3>Live countdown timers</h3>
+            <p>See exactly how much time is left for every task down to the second.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Urgency cues</h3>
+            <p>Deadlines become easier to scan with color and timing signals that update as time passes.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Progress rings</h3>
+            <p>Track how far through a task's lifespan you are without digging into details.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Tags and categories</h3>
+            <p>Group tasks by life area, work stream, client, or any custom label you need.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Subtasks</h3>
+            <p>Break larger projects into smaller steps and track progress as you go.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Timeline view</h3>
+            <p>See your workload across time with a visual timeline that adds schedule context.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HOW IT WORKS ── -->
+    <section class="section surface" id="how-it-works">
+      <div class="container">
+        <div class="section-head" data-reveal="up">
+          <p class="eyebrow">How it works</p>
+          <h2>Up and running in seconds</h2>
+          <p class="section-text">
+            PulseList is lightweight and straightforward, so you can open it and start planning right away.
+          </p>
+        </div>
+
+        <div class="steps-grid" data-stagger>
+          <article class="step-card">
+            <span class="step-number">01</span>
+            <h3>Open the app</h3>
+            <p>Run PulseList in any modern browser — no install or account setup required.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">02</span>
+            <h3>Add your tasks</h3>
+            <p>Create tasks with due dates, categories, tags, subtasks, and priorities.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">03</span>
+            <h3>Review your day</h3>
+            <p>Use focused views to see what is due now, later, or across the full timeline.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">04</span>
+            <h3>Stay in motion</h3>
+            <p>Mark items complete, adjust plans, and keep momentum without losing context.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEWS ── -->
+    <section class="section" id="views">
+      <div class="container">
+        <div class="section-head" data-reveal="up">
+          <p class="eyebrow">Views</p>
+          <h2>Three ways to see your work</h2>
+          <p class="section-text">
+            Switch between a full task grid, a focused today view, and a timeline when you need broader planning context.
+          </p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="PulseList views">
+          <button class="tab is-active" type="button" role="tab" aria-selected="true" data-tab="grid">Grid</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-tab="today">Today</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-tab="timeline">Timeline</button>
+        </div>
+
+        <div class="tab-panels">
+          <article class="tab-panel is-active" data-panel="grid">
+            <div class="panel-copy">
+              <h3>Grid view</h3>
+              <p>Your default workspace for browsing, reordering, and managing active tasks.</p>
+            </div>
+          </article>
+          <article class="tab-panel" data-panel="today" hidden>
+            <div class="panel-copy">
+              <h3>Today view</h3>
+              <p>See what needs attention right now without the noise of your full task list.</p>
+            </div>
+          </article>
+          <article class="tab-panel" data-panel="timeline" hidden>
+            <div class="panel-copy">
+              <h3>Timeline view</h3>
+              <p>Understand where each task sits across the schedule and spot conflicts earlier.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="section">
+      <div class="container">
+        <div class="cta-card" data-reveal="up">
+          <div class="cta-copy">
+            <p class="eyebrow">Get started</p>
+            <h2>Take control of your time.</h2>
+            <p>PulseList is built for people who want structure without unnecessary setup, clutter, or subscriptions.</p>
+          </div>
+          <div class="cta-actions">
+            <a href="pulselist-auth.html" class="button button-primary">Get started free</a>
+            <a href="pulselist-app.html" class="button button-secondary">Open app preview</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <a href="index.html" class="brand">PulseList</a>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#views">Views</a>
+        <a href="https://pulselist.kamfolio.com/anchor-details.html">Anchor →</a>
+      </div>
+      <p>Built for people who hate missing deadlines.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } }),
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('[data-reveal],[data-stagger]').forEach(el => io.observe(el));
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => { t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
+        document.querySelectorAll('.tab-panel').forEach(p => p.hidden = true);
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected','true');
+        const panel = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
+        if (panel) panel.hidden = false;
+      });
+    });
+
+    // Mobile nav
+    const toggle = document.querySelector('[data-nav-toggle]');
+    const menu   = document.querySelector('[data-nav-menu]');
+    if (toggle && menu) toggle.addEventListener('click', () => {
+      const open = menu.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open);
+    });
+  </script>
+</body>
+</html>

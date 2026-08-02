@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseList App</title>
+  <meta
+    name="description"
+    content="PulseList is a task tracker with categories, subtasks, timeline planning, and responsive task management."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="pulselist-app.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script defer src="pulselist-app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-left">
+        <button class="icon-button mobile-only" type="button" aria-label="Open sidebar" data-sidebar-toggle>
+          ☰
+        </button>
+        <a href="index.html" class="brand">PulseList</a>
+      </div>
+
+      <div class="header-center" role="tablist" aria-label="Views">
+        <button class="view-button is-active" type="button" data-view="grid" aria-selected="true">Grid</button>
+        <button class="view-button" type="button" data-view="today" aria-selected="false">Today</button>
+        <button class="view-button" type="button" data-view="timeline" aria-selected="false">Timeline</button>
+        <button class="view-button" type="button" data-view="archive" aria-selected="false">Archive</button>
+      </div>
+
+      <div class="header-actions">
+        <a href="https://pulselist.kamfolio.com/index-anchor.html" class="button button-primary">⚓Anchor</a>
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme">◐</button>
+        <button class="icon-button" type="button" data-open-settings-modal aria-label="Settings">⚙</button>
+        <button class="button button-primary" type="button" data-open-task-modal>New task</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar" data-sidebar>
+        <div class="sidebar-section">
+          <p class="sidebar-label">Views</p>
+          <button class="sidebar-item is-active" type="button" data-status-item="all">All tasks <span>0</span></button>
+          <button class="sidebar-item" type="button" data-status-item="today">Today <span>0</span></button>
+          <button class="sidebar-item" type="button" data-status-item="active">Active <span>0</span></button>
+          <button class="sidebar-item" type="button" data-status-item="blocked">Blocked <span>0</span></button>
+          <button class="sidebar-item" type="button" data-status-item="overdue">Overdue <span>0</span></button>
+          <button class="sidebar-item" type="button" data-status-item="done">Archive <span>0</span></button>
+        </div>
+
+        <div class="sidebar-section" data-categories-section>
+          <p class="sidebar-label">Categories</p>
+          <button class="sidebar-manage" type="button" data-open-category-modal>Manage categories</button>
+        </div>
+      </aside>
+
+      <main class="main-content" id="main">
+        <section class="notification-banner" aria-live="polite">
+          <div>
+            <strong>Notifications</strong>
+            <p>Enable alerts to get reminded when tasks become due.</p>
+          </div>
+          <button class="button button-secondary" type="button">Enable</button>
+        </section>
+
+        <section class="stats-grid" aria-label="Task summary">
+          <article class="stat-card">
+            <span>Total</span>
+            <strong>0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Active</span>
+            <strong>0</strong>
+          </article>
+          <article class="stat-card danger">
+            <span>Overdue</span>
+            <strong>0</strong>
+          </article>
+          <article class="stat-card success">
+            <span>Archived</span>
+            <strong>0</strong>
+          </article>
+        </section>
+
+        <section class="toolbar">
+          <label class="search-field">
+            <span class="sr-only">Search tasks</span>
+            <input type="search" placeholder="Search tasks" />
+          </label>
+        </section>
+
+        <section class="content-view is-active" data-panel="grid">
+          <div class="sort-bar">
+            <span>Sort by:</span>
+            <button class="sort-btn" data-grid-sort="default">Default</button>
+            <button class="sort-btn is-active" data-grid-sort="time">Time Remaining</button>
+            <button class="sort-btn" data-grid-sort="priority">Priority</button>
+          </div>
+          <div class="task-grid"></div>
+        </section>
+
+        <section class="content-view" data-panel="today" hidden></section>
+
+        <section class="content-view" data-panel="timeline" hidden></section>
+        <section class="content-view" data-panel="archive" hidden></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+
+  <div class="overlay" data-task-modal hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h2>New task</h2>
+        <button class="icon-button" type="button" data-close-task-modal>✕</button>
+      </div>
+      <form class="modal-body">
+        <label>
+          <span>Task title</span>
+          <input type="text" name="title" placeholder="What needs to be done?" />
+        </label>
+        <label>
+          <span>Description</span>
+          <textarea name="description" rows="4" placeholder="Add details, notes, or context"></textarea>
+        </label>
+        <div class="form-grid">
+          <label>
+            <span>Category</span>
+            <select name="category"></select>
+          </label>
+          <label>
+            <span>Priority</span>
+            <select name="priority">
+              <option>Low</option>
+              <option selected>Medium</option>
+              <option>High</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-grid">
+          <label>
+            <span>Due date</span>
+            <input type="date" name="dueDate" />
+          </label>
+          <label>
+            <span>Due time</span>
+            <input type="time" name="dueTime" />
+          </label>
+        </div>
+        <label>
+          <span>Link</span>
+          <input type="url" name="link" placeholder="https://…" />
+        </label>
+        <div>
+          <p class="subtask-section-label">Subtasks</p>
+          <ul class="modal-subtask-list" data-subtask-list></ul>
+          <div class="subtask-add-row">
+            <input type="text" data-subtask-input placeholder="Add a step…" />
+            <button class="button button-secondary" type="button" data-add-subtask>Add</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="button button-secondary" type="button" data-close-task-modal>Cancel</button>
+          <button class="button button-primary" type="submit">Save task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="overlay" data-settings-modal hidden>
+    <div class="modal small-modal">
+      <div class="modal-head">
+        <h2>Settings</h2>
+        <button class="icon-button" type="button" data-close-settings-modal>✕</button>
+      </div>
+      <div class="modal-body">
+        <label>
+          <span>Task completion effect</span>
+          <select name="celebrationEffect">
+            <option value="confetti">🎊 Confetti</option>
+            <option value="sparkles">✨ Sparkles</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+        <div class="gcal-section">
+          <p class="settings-section-label">Notion</p>
+          <div class="gcal-status-row">
+            <span id="notionStatus" class="gcal-status-text">Not connected</span>
+            <button class="button button-secondary" type="button" id="notionDisconnectBtn" hidden style="padding:0.3rem 0.85rem;min-height:unset;font-size:0.82rem;">Disconnect</button>
+          </div>
+          <input id="notionUrlInput" type="url" placeholder="https://your-worker.workers.dev" style="width:100%;margin-top:0.5rem;padding:0.35rem 0.6rem;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;background:var(--input-bg,#fff);color:inherit;" />
+          <button class="button button-secondary" type="button" id="notionConnectBtn" style="margin-top:0.4rem;padding:0.3rem 0.85rem;min-height:unset;font-size:0.82rem;">Connect</button>
+          <p class="gcal-hint">Tasks sync to your Notion database via a Cloudflare Worker. See <code>notion-worker.js</code> for setup instructions.</p>
+        </div>
+        <div class="modal-actions">
+          <button class="button button-secondary" type="button" data-close-settings-modal>Close</button>
+          <button class="button" type="button" data-logout style="background:var(--danger);color:white;">Log out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" data-category-modal hidden>
+    <div class="modal small-modal">
+      <div class="modal-head">
+        <h2>Manage categories</h2>
+        <button class="icon-button" type="button" data-close-category-modal>✕</button>
+      </div>
+      <div class="modal-body">
+        <div data-category-list class="stack-group"></div>
+        <form data-add-category-form class="form-grid" style="grid-template-columns:1fr auto;margin-top:0.5rem;">
+          <input type="text" name="categoryName" placeholder="New category name" />
+          <button class="button button-primary" type="submit">Add</button>
+        </form>
+        <div class="modal-actions">
+          <button class="button button-secondary" type="button" data-close-category-modal>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
